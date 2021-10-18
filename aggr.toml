@@ -1,0 +1,35 @@
+[sources.my_source_id]
+type = "prometheus_scrape"
+endpoints = [ "http://localhost:8000/metrics" ]
+scrape_interval_secs = 5
+instance_tag = "instance"
+endpoint_tag = "endpoint"
+
+[sources.my_source_id2]
+type = "prometheus_scrape"
+endpoints = [ "http://localhost:8001/metrics" ]
+scrape_interval_secs = 5
+instance_tag = "instance"
+endpoint_tag = "endpoint"
+
+[transforms.my_transform_id]
+type = "aggregate"
+inputs = [ "my_source_id", "my_source_id2" ]
+interval_ms = 15_000
+
+#[sinks.my_sink_id]
+# type = "console"
+# inputs = [ "my_source_id", "my_source_id2" ]
+# target = "stdout"
+# encoding.codec = "json"
+
+[transforms.my_transform_id2]
+type = "reduce"
+inputs = [ "my_transform_id" ]
+group_by = [ "name" ]
+
+[sinks.my_sink_id2]
+type = "console"
+inputs = [ "my_transform_id2" ]
+target = "stdout"
+encoding.codec = "json"
