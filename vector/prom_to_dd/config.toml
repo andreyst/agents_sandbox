@@ -1,0 +1,18 @@
+[sources.my_source_id]
+type = "prometheus_scrape"
+endpoints = [ "http://localhost:8000/metrics", "http://localhost:8001/metrics" ]
+scrape_interval_secs = 15
+instance_tag = "instance"
+endpoint_tag = "endpoint"
+
+[sinks.my_sink_id]
+type = "datadog_metrics"
+inputs = [ "my_source_id" ]
+api_key = "${DATADOG_API_KEY}"
+default_namespace = "test_prom_to_dd"
+
+[sinks.my_sink_id2]
+type = "console"
+inputs = [ "my_source_id" ]
+target = "stdout"
+encoding = "json"
